@@ -1,0 +1,16 @@
+extends ../layouts/layout
+
+block content
+  h1 Catálogo de Objetos Celestes
+
+  .catalog-grid
+    each obj in objetos
+      .card
+        img(src=obj.imagen, alt=obj.nombre)
+        h2= obj.nombre
+        p Tipo: #{obj.tipo}
+        if obj.magnitud
+          p Magnitud: #{obj.magnitud}
+        if obj.distancia
+          p Distancia: #{obj.distancia} años luz
+        a(href=`/objeto/${obj.id}`) Ver más
