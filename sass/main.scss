@@ -40,3 +40,56 @@ body {
     text-decoration: none;
   }
 }
+
+
+.detalle {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #1f2833;
+  border-radius: 10px;
+
+  img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+  }
+
+  h1, h3, h4 {
+    margin-top: 1rem;
+    color: #66fcf1;
+  }
+
+  a {
+    color: #66fcf1;
+    text-decoration: underline;
+  }
+}
+
+//barra de busqueda
+
+.filtros {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+
+  input, select {
+    padding: 0.5rem;
+    background: #0b0c10;
+    color: #fff;
+    border: 1px solid #45a29e;
+    border-radius: 5px;
+  }
+
+  button {
+    background: #66fcf1;
+    color: #0b0c10;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,26 @@
+extends ../layouts/layout
+
+block content
+  h1 Catálogo de Objetos Celestes
+
+select(name="tipo")
+  option(value="Todos" selected=(filtros && filtros.tipo === 'Todos')) Todos los tipos
+  option(value="Estrella" selected=(filtros && filtros.tipo === 'Estrella')) Estrella
+  option(value="Planeta" selected=(filtros && filtros.tipo === 'Planeta')) Planeta
+  option(value="Galaxia" selected=(filtros && filtros.tipo === 'Galaxia')) Galaxia
+
+input(type="number", name="magnitud", step="0.1", placeholder="Máx. magnitud", value=(filtros && filtros.magnitud) || '')
+
+  button(type="submit") Filtrar
+
+  .catalog-grid
+    each obj in objetos
+      .card
+        img(src=obj.imagen, alt=obj.nombre)
+        h2= obj.nombre
+        p Tipo: #{obj.tipo}
+        if obj.magnitud
+          p Magnitud: #{obj.magnitud}
+        if obj.distancia
+          p Distancia: #{obj.distancia} años luz
+        a(href=`/objeto/${obj.id}`) Ver más
