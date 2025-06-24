@@ -1,0 +1,18 @@
+extends ../layouts/layout
+
+block content
+  h1 Búsqueda en la base de datos de la NASA
+
+  form(action="/nasa", method="get")
+    input(type="text", name="q", placeholder="Ej: Jupiter", value=query)
+    button(type="submit") Buscar
+
+  if resultados.length
+    ul.resultados
+      each r in resultados
+        li
+          img(src=r.imagen, alt=r.nombre, width="200")
+          h2= r.nombre
+          p= r.descripcion
+  else if query
+    p No se encontraron resultados para "#{query}"

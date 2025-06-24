@@ -93,3 +93,22 @@ body {
     cursor: pointer;
   }
 }
+
+//nasa estilos
+
+.resultados {
+  list-style: none;
+  padding: 0;
+
+  li {
+    margin-bottom: 2rem;
+    background: #1f2833;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  img {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+}
