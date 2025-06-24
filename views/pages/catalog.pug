@@ -3,15 +3,26 @@ extends ../layouts/layout
 block content
   h1 Catálogo de Objetos Celestes
 
-select(name="tipo")
-  option(value="Todos" selected=(filtros && filtros.tipo === 'Todos')) Todos los tipos
-  option(value="Estrella" selected=(filtros && filtros.tipo === 'Estrella')) Estrella
-  option(value="Planeta" selected=(filtros && filtros.tipo === 'Planeta')) Planeta
-  option(value="Galaxia" selected=(filtros && filtros.tipo === 'Galaxia')) Galaxia
-
-input(type="number", name="magnitud", step="0.1", placeholder="Máx. magnitud", value=(filtros && filtros.magnitud) || '')
-
-  button(type="submit") Filtrar
+  form(action="/catalogo", method="get", class="filtros")
+    input(
+      type="text", 
+      name="nombre", 
+      placeholder="Buscar por nombre", 
+      value=(filtros && filtros.nombre) || ''
+    )
+    select(name="tipo")
+      option(value="Todos" selected=(filtros && filtros.tipo === 'Todos')) Todos los tipos
+      option(value="Estrella" selected=(filtros && filtros.tipo === 'Estrella')) Estrella
+      option(value="Planeta" selected=(filtros && filtros.tipo === 'Planeta')) Planeta
+      option(value="Galaxia" selected=(filtros && filtros.tipo === 'Galaxia')) Galaxia
+    input(
+      type="number", 
+      name="magnitud", 
+      step="0.1", 
+      placeholder="Máx. magnitud", 
+      value=(filtros && filtros.magnitud) || ''
+    )
+    button(type="submit") Filtrar
 
   .catalog-grid
     each obj in objetos
