@@ -4,34 +4,30 @@ block content
   h1 Catálogo de Objetos Celestes
 
   form(action="/catalogo", method="get", class="filtros")
-    input(
-      type="text", 
-      name="nombre", 
-      placeholder="Buscar por nombre", 
-      value=(filtros && filtros.nombre) || ''
-    )
+    input(type="text", name="nombre", placeholder="Buscar por nombre o imagen", value=(filtros && filtros.nombre) || '')
     select(name="tipo")
-      option(value="Todos" selected=(filtros && filtros.tipo === 'Todos')) Todos los tipos
-      option(value="Estrella" selected=(filtros && filtros.tipo === 'Estrella')) Estrella
-      option(value="Planeta" selected=(filtros && filtros.tipo === 'Planeta')) Planeta
-      option(value="Galaxia" selected=(filtros && filtros.tipo === 'Galaxia')) Galaxia
-    input(
-      type="number", 
-      name="magnitud", 
-      step="0.1", 
-      placeholder="Máx. magnitud", 
-      value=(filtros && filtros.magnitud) || ''
-    )
-    button(type="submit") Filtrar
+      option(value="Todos", selected=(filtros && filtros.tipo === 'Todos')) Todos los tipos
+      option(value="Estrella", selected=(filtros && filtros.tipo === 'Estrella')) Estrella
+      option(value="Planeta", selected=(filtros && filtros.tipo === 'Planeta')) Planeta
+      option(value="Galaxia", selected=(filtros && filtros.tipo === 'Galaxia')) Galaxia
+    input(type="number", name="magnitud", step="0.1", placeholder="Máx. magnitud", value=(filtros && filtros.magnitud) || '')
+    label
+      input(type="checkbox", name="externo", checked=externo)
+      | Buscar en la NASA
+    button(type="submit") Buscar
 
-  .catalog-grid
-    each obj in objetos
-      .card
-        img(src=obj.imagen, alt=obj.nombre)
-        h2= obj.nombre
-        p Tipo: #{obj.tipo}
-        if obj.magnitud
-          p Magnitud: #{obj.magnitud}
-        if obj.distancia
-          p Distancia: #{obj.distancia} años luz
-        a(href=`/objeto/${obj.id}`) Ver más
+  // ✅ Lista de tarjetas de objetos
+  if objetos.length
+    .grid
+      each objeto in objetos
+        .card
+          h2= objeto.nombre
+          img(src=objeto.imagen, alt=objeto.nombre, width="250")
+          p Tipo: #{objeto.tipo}
+          if objeto.magnitud
+            p Magnitud: #{objeto.magnitud}
+          if objeto.distancia
+            p Distancia: #{objeto.distancia} años luz
+          a(href=`/objeto/${objeto.id}`) Ver más →
+  else
+    p No se encontraron resultados.

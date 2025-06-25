@@ -5,40 +5,30 @@ body {
   padding: 1rem;
 }
 
+//Estilo de catalogo
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
   margin-top: 2rem;
 }
 
 .card {
-  background: #1f2833;
-  border-radius: 10px;
+  background: #1e1e1e;
+  border: 1px solid #333;
   padding: 1rem;
-  text-align: center;
-  box-shadow: 0 0 10px #45a29e;
+  border-radius: 10px;
+  color: white;
+  transition: transform 0.2s ease;
+}
 
-  img {
-    max-width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 5px;
-  }
+.card:hover {
+  transform: scale(1.02);
+}
 
-  h2 {
-    margin: 0.5rem 0;
-  }
-
-  a {
-    display: inline-block;
-    margin-top: 0.5rem;
-    background: #66fcf1;
-    color: #0b0c10;
-    padding: 0.4rem 0.8rem;
-    border-radius: 5px;
-    text-decoration: none;
-  }
+.card img {
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
 }
 
 
