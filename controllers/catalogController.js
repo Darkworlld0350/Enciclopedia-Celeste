@@ -13,14 +13,14 @@ exports.catalogo = async (req, res) => {
     },
     {
       id: 2,
-      nombre: 'Júpiter',
+      nombre: 'Jupiter',
       tipo: 'Planeta',
       distancia: 5.2,
       imagen: '/img/jupiter.jpg',
     },
     {
       id: 3,
-      nombre: 'Andrómeda',
+      nombre: 'Andromeda',
       tipo: 'Galaxia',
       distancia: 2537000,
       imagen: '/img/andromeda.jpg',
@@ -71,14 +71,14 @@ exports.detalleObjeto = (req, res) => {
     },
     {
       id: 2,
-      nombre: 'Júpiter',
+      nombre: 'Jupiter',
       tipo: 'Planeta',
       distancia: 5.2,
       imagen: '/img/jupiter.jpg',
     },
     {
       id: 3,
-      nombre: 'Andrómeda',
+      nombre: 'Andromeda',
       tipo: 'Galaxia',
       distancia: 2537000,
       imagen: '/img/andromeda.jpg',

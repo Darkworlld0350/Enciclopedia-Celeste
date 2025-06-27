@@ -1,0 +1,21 @@
+extends ../layouts/layout
+
+block content
+  h1 Datos Científicos: #{datos.nombre}
+  p= datos.descripcion
+
+  if datos.data
+    table
+      thead
+        tr
+          th Campo
+          th Valor
+      tbody
+        each val, key in Object.entries(datos.data)
+          tr
+            td= val[0]
+            td= val[1]
+  else
+    p No se encontraron datos detallados para este objeto.
+
+  a(href="/catalogo") ← Volver al catálogo
