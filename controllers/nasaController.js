@@ -1,17 +1,9 @@
-// controllers/nasaController.js
-const nasaService = require('../services/nasaService');
-
+const { buscarObjetos } = require('../services/nasaService');
 
 exports.buscar = async (req, res) => {
-  const { q } = req.query;
+  const query = req.query.q;
+  if (!query) return res.render('pages/nasa', { resultados: null, query: '' });
 
-  if (!q) {
-    return res.render('pages/nasa', { resultados: [], query: '' });
-  }
-
-  const resultados = await nasaService.buscarObjetos(q);
-  res.render('pages/nasa', { resultados, query: q });
-  console.log('Respuesta cruda de SIMBAD:', resultados);
-
+  const resultados = await buscarObjetos(query);
+  res.render('pages/nasa', { resultados, query });
 };
-

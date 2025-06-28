@@ -1,4 +1,4 @@
-const { buscarSimbad } = require('../services/simbadService');
+const { buscarSimbad } = require('../services/buscarNed');
 
 exports.verCientifico = async (req, res) => {
   const nombre = req.params.nombre;

@@ -11,10 +11,10 @@ block content
           th Campo
           th Valor
       tbody
-        each val, key in Object.entries(datos.data)
+        each val, key in datos.data
           tr
-            td= val[0]
-            td= val[1]
+            td= key
+            td= val
   else
     p No se encontraron datos detallados para este objeto.
 

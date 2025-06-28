@@ -7,12 +7,13 @@ block content
     input(type="text", name="q", placeholder="Ej: Jupiter", value=query)
     button(type="submit") Buscar
 
-  if resultados.length
-    ul.resultados
-      each r in resultados
-        li
-          img(src=r.imagen, alt=r.nombre, width="200")
-          h2= r.nombre
-          p= r.descripcion
+  if resultados
+    each resultado in resultados
+      .resultado
+        if resultado.imagen
+          img(src=resultado.imagen, alt=resultado.nombre)
+        h2= resultado.nombre
+        p= resultado.descripcion
+
   else if query
     p No se encontraron resultados para "#{query}"

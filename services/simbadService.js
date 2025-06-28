@@ -1,55 +1,36 @@
 const axios = require('axios');
 const xml2js = require('xml2js');
 
-exports.buscarSimbad = async (nombreOriginal) => {
-  const query = nombreOriginal.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const url = `http://simbad.u-strasbg.fr/simbad/sim-id?Ident=${encodeURIComponent(query)}&output.format=VOTable`;
+exports.buscarSIMBAD = async (nombreOriginal) => {
+  const query = nombreOriginal.trim();
 
   try {
-    const response = await axios.get(url);
-    const xml = response.data;
-    const result = await xml2js.parseStringPromise(xml, { mergeAttrs: true });
+    const response = await axios.get(`https://simbad.u-strasbg.fr/simbad/sim-id`, {
+      params: {
+        Ident: query,
+        'output.format': 'VOTable'
+      }
+    });
 
-    // Verificar si hay mensaje de error de SIMBAD
-    const infoNode = result.VOTABLE?.INFO?.[0];
-    const errorMsg = infoNode?.$.value || infoNode?._;
-    if (errorMsg) {
-      console.warn(`SIMBAD INFO: ${errorMsg}`);
+    const result = await xml2js.parseStringPromise(response.data, { mergeAttrs: true });
+
+    const data = result?.VOTABLE?.RESOURCE?.[0]?.TABLE?.[0]?.DATA?.[0]?.TABLEDATA?.[0]?.TR?.[0]?.TD;
+    if (!data || data.length < 4) {
+      return null;
     }
-
-    // Acceder a las filas de la tabla
-    const rows = result.VOTABLE?.RESOURCE?.[0]?.TABLE?.[0]?.DATA?.[0]?.TABLEDATA?.[0]?.TR;
-    if (!rows || rows.length === 0) {
-      return {
-        nombre: nombreOriginal,
-        descripcion: 'No se encontraron datos útiles en la respuesta.',
-        data: null,
-      };
-    }
-
-    const tableData = rows[0]?.TD || [];
-
-    // Extraer valores con fallback
-    const camposDeseados = {
-      Identificador: tableData[3]?.[0] || 'Desconocido',
-      Tipo: tableData[4]?.[0] || 'Desconocido',
-      DistanciaAngular: (tableData[2]?.[0] || '0') + ' arcsec',
-      RA: (tableData[5]?.[0] || '0') + '°',
-      DEC: (tableData[6]?.[0] || '0') + '°'
-    };
 
     return {
-      nombre: nombreOriginal,
-      descripcion: 'Datos obtenidos correctamente desde SIMBAD.',
-      data: camposDeseados
+      nombre: query,
+      descripcion: 'Datos obtenidos desde SIMBAD.',
+      data: {
+        Identificador: data[0] || 'N/A',
+        Coordenadas_RA: data[1] || 'N/A',
+        Coordenadas_DEC: data[2] || 'N/A',
+        Tipo: data[3] || 'N/A',
+      }
     };
-
   } catch (error) {
     console.error('Error al consultar/parsing SIMBAD:', error.message);
-    return {
-      nombre: nombreOriginal,
-      descripcion: 'Error al obtener datos desde SIMBAD.',
-      data: null,
-    };
+    return null;
   }
 };
