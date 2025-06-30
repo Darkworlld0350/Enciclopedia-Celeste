@@ -1,25 +1,11 @@
 extends ../layouts/layout
 
 block content
-  .detalle
-    img(src=objeto.imagen, alt=objeto.nombre)
-    h1= objeto.nombre
-    h3 Tipo: #{objeto.tipo}
-    if objeto.magnitud
-      p Magnitud aparente: #{objeto.magnitud}
-    if objeto.distancia
-      p Distancia: #{objeto.distancia} años luz
-    if objeto.composicion
-      p Composición: #{objeto.composicion}
-    if objeto.historia
-      h4 Historia y mitología
-      p= objeto.historia
-    if objeto.observacion
-      h4 Observación
-      p= objeto.observacion
-    if objeto.enlace
-      h4 Referencias
-      a(href=objeto.enlace target="_blank") Ver más información
-    a(href="/catalogo") ← Volver al catálogo
-    a(href=`/cientifico/${objeto.nombre}`) Ver datos científicos →
+  h1= detalle.id
 
+  if detalle.imagenes && detalle.imagenes.length
+    each img in detalle.imagenes
+      img(src=img, style="max-width: 100%; margin-bottom: 1rem")
+
+  p= detalle.descripcion || 'Sin descripción disponible'
+  a.back-button(href='/') Volver al catálogo

@@ -1,33 +1,23 @@
 extends ../layouts/layout
 
 block content
-  h1 Catálogo de Objetos Celestes
+  form(action='/catalogo', method='get')
+    input(type='text', name='nombre', placeholder='Buscar por nombre o ID')
+    button(type='submit') Buscar
 
-  form(action="/catalogo", method="get", class="filtros")
-    input(type="text", name="nombre", placeholder="Buscar por nombre o imagen", value=(filtros && filtros.nombre) || '')
-    select(name="tipo")
-      option(value="Todos", selected=(filtros && filtros.tipo === 'Todos')) Todos los tipos
-      option(value="Estrella", selected=(filtros && filtros.tipo === 'Estrella')) Estrella
-      option(value="Planeta", selected=(filtros && filtros.tipo === 'Planeta')) Planeta
-      option(value="Galaxia", selected=(filtros && filtros.tipo === 'Galaxia')) Galaxia
-    input(type="number", name="magnitud", step="0.1", placeholder="Máx. magnitud", value=(filtros && filtros.magnitud) || '')
-    label
-      input(type="checkbox", name="externo", checked=externo)
-      | Buscar en la NASA
-    button(type="submit") Buscar
-
-  // ✅ Lista de tarjetas de objetos
   if objetos.length
-    .grid
+    h2 Resultados:
+    ul
       each objeto in objetos
-        .card
-          h2= objeto.nombre
-          img(src=objeto.imagen, alt=objeto.nombre, width="250")
+        li
+          h3= objeto.nombre
+          if objeto.imagen
+            img(src=objeto.imagen, alt=objeto.nombre, width="200")
+          else
+            p Imagen no disponible
           p Tipo: #{objeto.tipo}
-          if objeto.magnitud
-            p Magnitud: #{objeto.magnitud}
-          if objeto.distancia
-            p Distancia: #{objeto.distancia} años luz
-          a(href=`/objeto/${objeto.id}`) Ver más →
+          p Descripción: #{objeto.descripcion} 
+  else if filtros.nombre
+    p No se encontraron resultados para "#{filtros.nombre}"
   else
-    p No se encontraron resultados.
+    p Ingresa un nombre o ID para comenzar la búsqueda.

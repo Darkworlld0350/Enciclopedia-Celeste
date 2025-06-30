@@ -1,10 +1,19 @@
 extends ../layouts/layout
 
 block content
-  h1 Enciclopedia Celeste Interactiva
-  p Bienvenido al catálogo astronómico más completo.
+  h1 Enciclopedia Celeste
 
-  a(href="/catalogo") 
-    h1 Prueba catalogo
-  a(href="/nasa")
-    h1 Prueba buscador de imagenes
+  form(action='/catalogo', method='get')
+    input(type='text', name='nombre', placeholder='Buscar por nombre o ID')
+    button(type='submit') Buscar
+
+
+  if objetos.length
+    .catalogo-grid
+      each obj in objetos
+        a.card(href=`/catalogo/${obj.id}`)
+          if obj.imagen
+            img(src=obj.imagen, alt=obj.nombre)
+          h2= obj.nombre
+  else
+    p No se encontraron objetos.

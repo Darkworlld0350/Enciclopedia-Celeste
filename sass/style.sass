@@ -1,0 +1,157 @@
+// ===========================
+// VARIABLES
+// ===========================
+$bg-color: #0b0c10
+$card-bg: #1e1e1e
+$detail-bg: #1f2833
+$text-color: #c5c6c7
+$highlight: #66fcf1
+$primary: #45a29e
+$card-glow: #00f7ff66
+$card-glow-hover: #00f7ffaa
+
+// ===========================
+// GLOBALES
+// ===========================
+body
+  background-color: $bg-color
+  color: $text-color
+  font-family: 'Segoe UI', sans-serif
+  padding: 1rem
+  margin: 0
+
+h1, h2, h3, h4
+  color: $highlight
+
+// ===========================
+// BARRA DE BÚSQUEDA (Google-like)
+// ===========================
+form
+  display: flex
+  flex-direction: row
+  align-items: center
+  gap: 0.5rem
+  margin-bottom: 1.5rem
+
+  input[type="text"]
+    padding: 0.5rem 1rem
+    font-size: 1rem
+    border: 1px solid $primary
+    border-radius: 8px
+    background-color: $bg-color
+    color: white
+    flex-grow: 1
+
+  button
+    padding: 0.5rem 1rem
+    font-weight: bold
+    background-color: $highlight
+    border: none
+    color: $bg-color
+    border-radius: 8px
+    cursor: pointer
+
+    &:hover
+      background-color: lighten $highlight, 5%
+
+// ===========================
+// CATÁLOGO
+// ===========================
+.catalogo-grid
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
+  gap: 1rem
+  margin-top: 2rem
+
+.card, .objeto-card
+  background: $card-bg
+  padding: 1rem
+  border-radius: 10px
+  box-shadow: 0 0 10px $card-glow
+  transition: all 0.3s ease
+  text-align: center
+
+  &:hover
+    transform: scale(1.02)
+    box-shadow: 0 0 15px $card-glow-hover
+
+  img
+    max-width: 100%
+    border-radius: 6px
+    margin-bottom: 0.5rem
+
+  h2
+    font-size: 1.2rem
+    color: $highlight
+
+  p
+    color: $text-color
+
+// ===========================
+// DETALLES
+// ===========================
+.detalle
+  max-width: 800px
+  margin: 2rem auto
+  padding: 2rem
+  background: $detail-bg
+  border-radius: 10px
+
+  img
+    width: 100%
+    max-height: 400px
+    object-fit: cover
+    border-radius: 10px
+    margin-bottom: 1rem
+
+  h1, h3, h4
+    margin-top: 1rem
+    color: $highlight
+
+  a
+    color: $highlight
+    text-decoration: underline
+
+// ===========================
+// TABLA CIENTÍFICA
+// ===========================
+table
+  width: 100%
+  border-collapse: collapse
+  margin-top: 2rem
+
+  th, td
+    padding: 0.75rem
+    border: 1px solid $primary
+    text-align: left
+
+  th
+    background-color: $detail-bg
+    color: $highlight
+
+  td
+    color: $text-color
+
+// ===========================
+// RESULTADOS NASA
+// ===========================
+.resultados
+  list-style: none
+  padding: 0
+
+  li
+    margin-bottom: 2rem
+    background: $detail-bg
+    padding: 1rem
+    border-radius: 10px
+
+    img
+      max-width: 100%
+      border-radius: 8px
+
+    h2
+      color: $highlight
+      margin-top: 1rem
+
+    p
+      color: $text-color

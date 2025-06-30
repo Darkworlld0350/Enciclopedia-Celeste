@@ -1,40 +1,36 @@
-const { buscarNED } = require('./nedService');
-const { buscarSIMBAD } = require('./simbadService');
 const axios = require('axios');
+const xml2js = require('xml2js');
 
-exports.obtenerDatosCientificos = async (nombreOriginal) => {
-  // 1. NED
-  const ned = await buscarNED(nombreOriginal);
-  if (ned?.data) return ned;
-
-  // 2. le-systeme-solaire.net
+/**
+ * Busca un objeto astronómico en la base de datos NED (NASA/IPAC Extragalactic Database)
+ * @param {string} nombre - Nombre del objeto astronómico a buscar
+ * @returns {Promise<Object>} Objeto con los datos encontrados en formato estructurado
+ * @throws {Error} Si ocurre un error en la consulta a la API
+ */
+async function buscarNED(nombre) {
   try {
-    const { data } = await axios.get(`https://api.le-systeme-solaire.net/rest/bodies/${nombreOriginal.toLowerCase()}`);
-    if (data?.englishName) {
-      return {
-        nombre: data.englishName,
-        descripcion: 'Datos obtenidos desde le-systeme-solaire.net.',
-        data: {
-          Nombre: data.englishName,
-          Masa: data.mass?.massValue ? `${data.mass.massValue} x10^${data.mass.massExponent} kg` : 'N/A',
-          Densidad: data.density || 'N/A',
-          Gravedad: data.gravity ? `${data.gravity} m/s²` : 'N/A',
-          Radio: data.meanRadius ? `${data.meanRadius} km` : 'N/A',
-        }
-      };
-    }
+    // Construye la URL de consulta al servicio NED con formato XML
+    const url = `https://ned.ipac.caltech.edu/srs/ObjectLookup?objname=${encodeURIComponent(nombre)}&of=xml_main`;
+    const response = await axios.get(url);
+    
+    // Parsea el XML de respuesta a un objeto JSON
+    const parsed = await xml2js.parseStringPromise(response.data, { 
+      explicitArray: false // Evita crear arrays para elementos únicos
+    });
+
+    // Extrae los datos relevantes usando encadenamiento opcional
+    const datos = parsed?.VOTABLE?.RESOURCE?.TABLE?.DATA?.TABLEDATA?.TR;
+
+    // Retorna un objeto estandarizado con los resultados
+    return {
+      nombre,
+      fuente: 'NED',
+      datos: datos || 'Sin datos disponibles', // Proporciona valor por defecto
+    };
   } catch (error) {
-    console.error('Error desde sistema solar API:', error.message);
+    console.error('NED falló:', error.message);
+    throw error; // Relanza el error para manejo externo
   }
+}
 
-  // 3. SIMBAD
-  const simbad = await buscarSIMBAD(nombreOriginal);
-  if (simbad?.data) return simbad;
-
-  // Sin resultados
-  return {
-    nombre: nombreOriginal,
-    descripcion: 'No se pudo obtener información científica desde NED, sistema-solaire ni SIMBAD.',
-    data: null,
-  };
-};
+module.exports = { buscarNED };

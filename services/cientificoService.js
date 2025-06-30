@@ -1,52 +1,61 @@
-const { buscarNED } = require('./nedService');
-const { buscarSimbad } = require('./simbadService');
 const axios = require('axios');
+const xml2js = require('xml2js');
 
-exports.obtenerDatosCientificos = async (nombreOriginal) => {
-  // 1. Intentar con SIMBAD
-  try {
-    const simbad = await buscarSimbad(nombreOriginal);
-    if (simbad?.data) {
-      return simbad;
-    }
-  } catch (error) {
-    console.warn('SIMBAD falló:', error.message);
-  }
+// URLs base para APIs astronómicas
+const BASE_NED_URL = 'https://ned.ipac.caltech.edu/cgi-bin/objsearch?of=xml&id=';
+const BASE_SOL_URL = 'https://api.le-systeme-solaire.net/rest/bodies/';
 
-  // 2. Intentar con NED
-  try {
-    const ned = await buscarNED(nombreOriginal);
-    if (ned?.data) {
-      return ned;
-    }
-  } catch (error) {
-    console.warn('NED falló:', error.message);
-  }
+/**
+ * Busca un objeto astronómico por nombre en múltiples fuentes
+ * @param {string} nombre - Nombre del objeto a buscar
+ * @returns {Object|null} Datos del objeto o null si no se encuentra
+ */
+async function buscarObjetoPorNombre(nombre) {
+  const normalizado = nombre.trim().toLowerCase();
 
-  // 3. Respaldo: le-systeme-solaire.net
+  // 1. Intento con NED (NASA/IPAC Extragalactic Database)
   try {
-    const { data } = await axios.get(`https://api.le-systeme-solaire.net/rest/bodies/${nombreOriginal.toLowerCase()}`);
-    if (data && data.englishName) {
+    const nedRes = await axios.get(`${BASE_NED_URL}${encodeURIComponent(nombre)}`);
+    const parsed = await xml2js.parseStringPromise(nedRes.data, { explicitArray: false });
+
+    if (parsed?.Resource?.Results?.Result) {
+      const node = parsed.Resource.Results.Result;
       return {
-        nombre: data.englishName,
-        descripcion: 'Datos obtenidos desde le-systeme-solaire.net.',
-        data: {
-          Nombre: data.englishName,
-          Masa: data.mass?.massValue ? `${data.mass.massValue} x10^${data.mass.massExponent} kg` : 'N/A',
-          Densidad: data.density || 'N/A',
-          Gravedad: data.gravity ? `${data.gravity} m/s²` : 'N/A',
-          Radio: data.meanRadius ? `${data.meanRadius} km` : 'N/A',
-        }
+        fuente: 'NED',
+        nombre: node.Name || nombre,
+        tipo: node.Type || 'Desconocido',
+        redshift: node.Redshift || 'No disponible',
+        notas: node.Notes || '',
+        referencias: node?.Reference?.length || 0
       };
     }
-  } catch (error) {
-    console.warn('Error desde sistema solar API:', error.message);
+  } catch (err) {
+    console.warn('Error en NED:', err.message);
   }
 
-  // Si todas fallan
-  return {
-    nombre: nombreOriginal,
-    descripcion: 'No se pudo obtener información científica desde SIMBAD, NED ni sistema-solaire.',
-    data: null,
-  };
-};
+  // 2. Fallback a Solar System API
+  try {
+    const solRes = await axios.get(`${BASE_SOL_URL}${normalizado}`);
+    const body = solRes.data;
+
+    if (body?.englishName) {
+      return {
+        fuente: 'le-systeme-solaire.net',
+        nombre: body.englishName || nombre,
+        tipo: body.bodyType || 'Desconocido',
+        masa: body.mass?.massValue ? `${body.mass.massValue} x10^${body.mass.massExponent} kg` : 'No disponible',
+        densidad: body.density ?? 'No disponible',
+        gravedad: body.gravity ? `${body.gravity} m/s²` : 'No disponible',
+        radio: body.meanRadius ? `${body.meanRadius} km` : 'No disponible',
+        lunaCantidad: body.moons?.length || 0
+      };
+    }
+  } catch (err) {
+    console.warn('Error en Solar API:', err.message);
+  }
+
+  // 3. Si todas las fuentes fallan
+  return null;
+}
+
+module.exports = { buscarObjetoPorNombre };

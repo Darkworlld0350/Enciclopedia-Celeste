@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js",
-    "sass": "sass sass/main.scss public/css/style.css --watch"
+    "sass": "sass sass/style.sass public/css/style.css",
+    "sass-watch": "sass --watch sass/style.sass:public/css/style.css",
+    "start": "concurrently \"npm run sass-watch\" \"nodemon app.js\""
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,7 @@
   "type": "commonjs",
   "dependencies": {
     "axios": "^1.10.0",
+    "concurrently": "^9.2.0",
     "express": "^5.1.0",
     "pug": "^3.0.3",
     "xml2js": "^0.6.2"

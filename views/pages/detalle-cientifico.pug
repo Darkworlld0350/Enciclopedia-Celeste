@@ -1,21 +1,44 @@
 extends ../layouts/layout
 
 block content
-  h1 Datos Científicos: #{datos.nombre}
-  p= datos.descripcion
+  h1 Datos Científicos
 
-  if datos.data
-    table
-      thead
-        tr
-          th Campo
-          th Valor
-      tbody
-        each val, key in datos.data
-          tr
-            td= key
-            td= val
+  if data
+    h2= data.nombre
+    p Fuente: #[strong #{data.fuente}]
+
+    if data.tipo
+      p Tipo: #{data.tipo}
+
+    if data.redshift
+      p Redshift: #{data.redshift}
+
+    if data.notas
+      p Notas: #{data.notas}
+
+    if data.referencias != null
+      p Número de referencias: #{data.referencias}
+
+    if data.masa
+      p Masa: #{data.masa}
+
+    if data.densidad
+      p Densidad: #{data.densidad}
+
+    if data.gravedad
+      p Gravedad: #{data.gravedad}
+
+    if data.radio
+      p Radio medio: #{data.radio}
+
+    if data.lunaCantidad != null
+      p Número de lunas: #{data.lunaCantidad}
+
   else
-    p No se encontraron datos detallados para este objeto.
+    p No se encontraron datos científicos para este objeto.
 
-  a(href="/catalogo") ← Volver al catálogo
+  br
+ 
+  else
+    h2 Objeto no encontrado
+
